@@ -1,7 +1,8 @@
 import { NgfmItem } from './ngfm-item';
 export class NgfmFile extends NgfmItem {
     constructor(init: any) {
-        super(init);
+        super();
+        Object.assign(this, init);
     }
     readonly itemType = 'file';
     /**
