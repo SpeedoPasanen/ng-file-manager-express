@@ -1,11 +1,11 @@
 {
-  "name": "typescript-starter",
-  "version": "1.0.0",
+  "name": "ng-file-manager-express",
+  "version": "0.0.1",
   "description": "Express Router Backend for ng-file-manager",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/funkizer/ng-filemanager-express",
+  "repository": "https://github.com/funkizer/ng-file-manager-express",
   "license": "MIT",
   "keywords": [],
   "scripts": {
@@ -20,7 +20,9 @@
     "test:lint": "tslint --project . && prettier \"src/**/*.ts\" --list-different",
     "test:unit": "nyc --silent ava",
     "test:nsp": "nsp check",
-    "watch": "run-s clean build:main && run-p \"build:main -- -w\" \"test:unit -- --watch\"",
+    "watch-lib": "run-s clean build:main && run-p \"build:main -- -w\" \"test:unit -- --watch\" \"nodemon\"",
+    "nodemon-dev-app": "cd ./build/main && nodemon ./dev-app/index.js",
+    "watch": "run-p \"build:main -- -w\" \"nodemon-dev-app\"",
     "cov": "run-s build test:unit cov:html && opn coverage/index.html",
     "cov:html": "nyc report --reporter=html",
     "cov:send": "nyc report --reporter=lcov > coverage.lcov && codecov",
@@ -52,6 +54,18 @@
     "node": ">=8.9"
   },
   "dependencies": {
+    "@types/body-parser": "^1.16.8",
+    "@types/express": "^4.11.1",
+    "@types/mime-types": "^2.1.0",
+    "@types/morgan": "^1.7.35",
+    "@types/sanitize-filename": "^1.1.28",
+    "body-parser": "^1.18.2",
+    "connect-multiparty": "^2.1.0",
+    "express": "^4.16.3",
+    "mime-types": "^2.1.18",
+    "morgan": "^1.9.0",
+    "rxjs": "^5.5.7",
+    "sanitize-filename": "^1.6.1",
     "sha.js": "^2.4.10"
   },
   "devDependencies": {
