@@ -1,6 +1,7 @@
-import * as sha256 from 'sha256';
+const sha256 = require('sha256');
 import * as pathLib from 'path';
 import { NgfmConnectorConfig } from './ngfm-connector.config';
+import { Request } from 'express';
 export class NgfmConnectorStore {
     private hashExpiresIn = 5 * 60 * 1000;
     private _hashMap: Map<string, string> = new Map();
@@ -27,5 +28,11 @@ export class NgfmConnectorStore {
      */
     getFullPath(...args) {
         return pathLib.join(this.config.root, ...args);
+    }
+    /**
+     * Full public url of a request
+     */
+    getPublicUrl(req: Request) {
+        return (this.config.absoluteUrls !== false ? req.protocol + '://' + req.get('host') : '') + pathLib.join(req.baseUrl, req.path).replace(/\\/g, '/');
     }
 }

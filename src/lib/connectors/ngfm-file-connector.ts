@@ -80,7 +80,7 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
             fs.ensureDirSync(path)
         }
     }
-    ls(path: string): Promise<NgfmItem[]> {
+    ls(path: string, publicUrl: string): Promise<NgfmItem[]> {
         this.ensureDirIfNeeded(path);
         return new Promise((resolve, reject) => {
             fs.readdir(path, (err, files) => {
@@ -94,7 +94,7 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
                         name: fileName,
                         lastModified: new Date(stat.mtime).getTime(),
                         created: new Date(stat.birthtime).getTime(),
-                        url: pathLib.join(path, fileName)
+                        url: publicUrl + fileName
                     };
                     return stat.isFile() ? new NgfmFile(Object.assign(item, {
                         size: stat.size,
@@ -106,9 +106,9 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
         });
     }
     uploadFile(path: string, file): Promise<any> {
-        this.ensureDirIfNeeded(path);
+        const dirname = pathLib.dirname(path);
+        this.ensureDirIfNeeded(dirname);
         return new Promise((resolve, reject) => {
-            const dirname = pathLib.dirname(path);
             if (!fs.existsSync(dirname)) {
                 return reject(`Directory does not exist: ${dirname}`);
             }
