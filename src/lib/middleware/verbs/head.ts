@@ -4,9 +4,7 @@ import { Request } from 'express';
 
 export default function (connector: NgfmConnector) {
     return function (req: Request | any, res, next) {
-        connector.ls(connector.store.getFullPath(req.path)).then(
-            data => res.json(data),
-            error => next(error)
-        );
+        res.set('ngfm-hash', connector.store.getHash(req.path));
+        res.send();
     }
 }

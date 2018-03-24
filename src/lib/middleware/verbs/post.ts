@@ -5,7 +5,20 @@ import * as pathLib from 'path';
 import sanitizeFilename from 'sanitize-filename';
 export default function (connector: NgfmConnector) {
     return function (req: Request | any, res, next) {
-        console.log('files', req.files);
+        if ('from' in req.query) {
+            if (!connector.store.getPathForHash(req.query.from)) {
+                next(`Hash expired: ${req.query.from}`)
+            }
+            connector.rename(connector.store.getPathForHash(req.query.from), connector.store.getFullPath(req.path)).then(
+                () => {
+                    res.json({ moved: true, from: req.query.from, to: req.query.path });
+                },
+                err => {
+                    next(err);
+                }
+            );
+            return;
+        }
         if (req.files && req.files.file) {
             return upload(req, res, next);
         }
@@ -14,7 +27,7 @@ export default function (connector: NgfmConnector) {
     }
 
     function mkDir(req, res, next) {
-        connector.mkDir(req.path).then(
+        connector.mkDir(connector.store.getFullPath(req.path)).then(
             () => {
                 res.json({ created: req.path });
             },
@@ -35,7 +48,7 @@ export default function (connector: NgfmConnector) {
         };
         const fileName = req.path.replace(/.*\//, '');
         const path = pathLib.join(pathLib.dirname(req.path), sanitizeFilename(fileName));
-        connector.uploadFile(path, file).then(
+        connector.uploadFile(connector.store.getFullPath(path), file).then(
             () => {
                 wrapUp(null);
             },

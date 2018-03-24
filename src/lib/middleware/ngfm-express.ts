@@ -1,18 +1,27 @@
 import express, { Router } from 'express'
 import { NgfmConnector } from '../connectors/ngfm-connector';
 import multipart from 'connect-multiparty';
-import post from './verbs/post';
-import get from './verbs/get';
+import { NgfmExpressConfig } from './ngfm-express.config';
+import { NGFM_VERBS } from './verbs/index';
 export class NgfmExpress {
     public express;
 
-    constructor(public connector: NgfmConnector) {
+    constructor(public connector: NgfmConnector, protected config?: NgfmExpressConfig) {
         this.express = express();
     }
     public get router(): Router {
         const router = express.Router()
-        router.get('/**', get(this.connector));
-        router.post('/**', multipart(), post(this.connector));
+        router
+            .head('/**', NGFM_VERBS.head(this.connector))
+            .get('/**', NGFM_VERBS.get(this.connector))
+            .post('/**', multipart(), NGFM_VERBS.post(this.connector))
+            .delete('/**', NGFM_VERBS.delete(this.connector));
+        if (this.config && this.config.serveStatic) {
+            router.get('/**', express.static(this.config.serveStatic));
+        }
+        router.use((error, req, res, next) => {
+            res.status(400).json(typeof error === 'object' ? error : { error });
+        });
         return router;
     }
 

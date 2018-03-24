@@ -19,22 +19,29 @@ class DevApp {
         })
         this.express.use('/', router);
         const commonRoot = path.join(__dirname, '..', '..', '..', 'dev-files');
-        this.express.use('/files', express.static(commonRoot));
         this.express.use('/files/private/:userId', (req, res, next) => {
             if (req.params.userId !== '1337') {
                 return res.status(401).send('Unauthorized');
             }
             next();
         });
+        const privateRoot = path.join(commonRoot, 'private');
         const privateConnector = new NgfmFileConnector({
-            root: path.join(commonRoot, 'private')
+            root: privateRoot,
+            createRoot: true
         });
-        this.express.use('/files/private', new NgfmExpress(privateConnector).router);
+        this.express.use('/files/private', new NgfmExpress(privateConnector, {
+            serveStatic: privateRoot
+        }).router);
 
+        const publicRoot = path.join(commonRoot, 'public');
         const publicConnector = new NgfmFileConnector({
-            root: path.join(commonRoot, 'public')
+            root: publicRoot,
+            createRoot: true
         });
-        this.express.use('/files/public', new NgfmExpress(privateConnector).router);
+        this.express.use('/files/public', new NgfmExpress(publicConnector, {
+            serveStatic: publicRoot
+        }).router);
     }
 }
 

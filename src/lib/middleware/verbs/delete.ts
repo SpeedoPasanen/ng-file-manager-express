@@ -4,8 +4,8 @@ import { Request } from 'express';
 
 export default function (connector: NgfmConnector) {
     return function (req: Request | any, res, next) {
-        connector.ls(connector.store.getFullPath(req.path)).then(
-            data => res.json(data),
+        connector.rm(req.path).then(
+            () => res.json({ deleted: req.path }),
             error => next(error)
         );
     }
