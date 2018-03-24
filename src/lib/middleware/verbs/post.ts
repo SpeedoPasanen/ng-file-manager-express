@@ -1,8 +1,8 @@
 import { Request } from "express-serve-static-core";
-import fs from 'fs';
+import * as fs from 'fs';
 import { NgfmConnector } from '../../connectors/ngfm-connector';
 import * as pathLib from 'path';
-import sanitizeFilename from 'sanitize-filename';
+const sanitizeFilename = require('sanitize-filename');
 export default function (connector: NgfmConnector) {
     return function (req: Request | any, res, next) {
         if ('from' in req.query) {

@@ -1,6 +1,7 @@
-import express, { Router } from 'express'
+//import express, { Router } from 'express'
+const express = require('express');
 import { NgfmConnector } from '../connectors/ngfm-connector';
-import multipart from 'connect-multiparty';
+import * as multipart from 'connect-multiparty';
 import { NgfmExpressConfig } from './ngfm-express.config';
 import { NGFM_VERBS } from './verbs/index';
 export class NgfmExpress {
@@ -9,8 +10,8 @@ export class NgfmExpress {
     constructor(public connector: NgfmConnector, protected config?: NgfmExpressConfig) {
         this.express = express();
     }
-    public get router(): Router {
-        const router = express.Router()
+    public get router() {
+        const router = express.Router();
         router
             .head('/**', NGFM_VERBS.head(this.connector))
             .get('/**', NGFM_VERBS.get(this.connector))

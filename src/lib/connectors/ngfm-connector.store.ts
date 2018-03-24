@@ -1,6 +1,6 @@
-import sha256 from 'sha256';
-import { NgfmConnectorConfig } from '../../../build/main/lib/connectors/ngf-connector.config';
-import pathLib from 'path';
+import * as sha256 from 'sha256';
+import * as pathLib from 'path';
+import { NgfmConnectorConfig } from './ngfm-connector.config';
 export class NgfmConnectorStore {
     private hashExpiresIn = 5 * 60 * 1000;
     private _hashMap: Map<string, string> = new Map();

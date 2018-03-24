@@ -1,4 +1,4 @@
-import express from 'express'
+const express = require('express');
 import * as path from 'path';
 import { NgfmFileConnector } from '../lib/connectors/ngfm-file-connector';
 import { NgfmExpress } from '../lib/middleware/ngfm-express';

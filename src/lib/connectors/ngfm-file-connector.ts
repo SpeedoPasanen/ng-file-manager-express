@@ -1,14 +1,14 @@
 
-import fs from 'fs';
-import pathLib from 'path';
+import * as fs from 'fs';
+import * as pathLib from 'path';
+import * as mimeTypes from 'mime-types';
+import * as mkdirp from 'mkdirp';
+const rimraf = require('rimraf');
+import { NgfmBaseConnector } from './ngfm-base-connector';
 import { NgfmConnector } from './ngfm-connector';
 import { NgfmFile } from '../models/ngfm-file';
 import { NgfmFolder } from '../models/ngfm-folder';
 import { NgfmItem } from '../models/ngfm-item';
-import * as mimeTypes from 'mime-types';
-import mkdirp from 'mkdirp';
-import { NgfmBaseConnector } from './ngfm-base-connector';
-import rimraf from 'rimraf';
 import { NgfmConnectorConfig } from './ngfm-connector.config';
 export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnector {
     constructor(private config: NgfmConnectorConfig) {
@@ -23,7 +23,7 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
                 throw Error(`${config.root} does not exist. Set config.createRoot to true or create the root directory first.`);
             }
         }
-        console.log(`NgfmFileConnector ready at ${config.root}`);
+        console.log(`NgfmFileConnector ready at ${this.config.root}`);
     }
     folderExists(path: string): Promise<boolean> {
         return this.someExists(path, false);
