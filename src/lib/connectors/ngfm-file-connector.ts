@@ -69,10 +69,13 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
             });
         });
     }
-    ls(path: string): Promise<NgfmItem[]> {
+    private ensureDirIfNeeded(path) {
         if (this.config.autoCreateFolders) {
             fs.ensureDirSync(path)
         }
+    }
+    ls(path: string): Promise<NgfmItem[]> {
+        this.ensureDirIfNeeded(path);
         return new Promise((resolve, reject) => {
             fs.readdir(path, (err, files) => {
                 if (err) {
@@ -96,17 +99,22 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
             });
         });
     }
-    uploadFile(path: string, _file): Promise<any> {
+    uploadFile(path: string, file): Promise<any> {
+        this.ensureDirIfNeeded(path);
         return new Promise((resolve, reject) => {
             const dirname = pathLib.dirname(path);
             if (!fs.existsSync(dirname)) {
                 return reject(`Directory does not exist: ${dirname}`);
             }
-            fs.copyFile(_file.path, path, err => {
+            fs.copyFile(file.path, path, err => {
                 if (err) {
                     return reject(this.getError(err));
                 }
-                resolve(_file);
+                resolve({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type
+                });
             });
         });
     }
