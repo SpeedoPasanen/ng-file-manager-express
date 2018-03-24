@@ -1,5 +1,5 @@
-import { NgfmConnectorConfig } from "./ngf-connector.config";
 import { NgfmConnectorStore } from './ngfm-connector.store';
+import { NgfmConnectorConfig } from './ngfm-connector.config';
 export class NgfmBaseConnector {
     store: NgfmConnectorStore;
     constructor(config: NgfmConnectorConfig) {

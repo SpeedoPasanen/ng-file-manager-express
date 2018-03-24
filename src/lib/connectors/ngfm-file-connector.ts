@@ -6,10 +6,10 @@ import { NgfmFile } from '../models/ngfm-file';
 import { NgfmFolder } from '../models/ngfm-folder';
 import { NgfmItem } from '../models/ngfm-item';
 import * as mimeTypes from 'mime-types';
-import { NgfmConnectorConfig } from './ngf-connector.config';
 import mkdirp from 'mkdirp';
 import { NgfmBaseConnector } from './ngfm-base-connector';
 import rimraf from 'rimraf';
+import { NgfmConnectorConfig } from './ngfm-connector.config';
 export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnector {
     constructor(private config: NgfmConnectorConfig) {
         super(config);
