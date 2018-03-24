@@ -35,7 +35,8 @@
     "reset": "git clean -dfx && git reset --hard && npm i",
     "clean": "trash build test",
     "all": "run-s reset test cov:check doc:html",
-    "prepare-release": "run-s all version doc:publish"
+    "prepare-release": "run-s all version doc:publish",
+    "git-push": "git push --follow-tags origin master && npm publish"
   },
   "scripts-info": {
     "info": "Display information about the package scripts",
@@ -57,6 +58,7 @@
     "@types/body-parser": "^1.16.8",
     "@types/express": "^4.11.1",
     "@types/mime-types": "^2.1.0",
+    "@types/mkdirp": "^0.5.2",
     "@types/morgan": "^1.7.35",
     "@types/rimraf": "^2.0.2",
     "@types/sanitize-filename": "^1.1.28",
@@ -64,6 +66,7 @@
     "connect-multiparty": "^2.1.0",
     "express": "^4.16.3",
     "mime-types": "^2.1.18",
+    "mkdirp": "^0.5.1",
     "morgan": "^1.9.0",
     "rimraf": "^2.6.2",
     "rxjs": "^5.5.7",
