@@ -1,8 +1,7 @@
 
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import * as pathLib from 'path';
 import * as mimeTypes from 'mime-types';
-import * as mkdirp from 'mkdirp';
 const rimraf = require('rimraf');
 import { NgfmBaseConnector } from './ngfm-base-connector';
 import { NgfmConnector } from './ngfm-connector';
@@ -11,11 +10,11 @@ import { NgfmFolder } from '../models/ngfm-folder';
 import { NgfmItem } from '../models/ngfm-item';
 import { NgfmConnectorConfig } from './ngfm-connector.config';
 export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnector {
-    constructor(private config: NgfmConnectorConfig) {
+    constructor(config: NgfmConnectorConfig) {
         super(config);
         if (!fs.existsSync(config.root)) {
             if (config.createRoot) {
-                mkdirp(config.root, err => {
+                fs.ensureDir(config.root, err => {
                     if (err) { throw err; }
                     console.log(`Created: ${config.root}`);
                 });
@@ -71,6 +70,9 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
         });
     }
     ls(path: string): Promise<NgfmItem[]> {
+        if (this.config.autoCreateFolders) {
+            fs.ensureDirSync(path)
+        }
         return new Promise((resolve, reject) => {
             fs.readdir(path, (err, files) => {
                 if (err) {

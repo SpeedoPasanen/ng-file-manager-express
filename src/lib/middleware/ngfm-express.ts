@@ -1,7 +1,7 @@
 //import express, { Router } from 'express'
 const express = require('express');
 import { NgfmConnector } from '../connectors/ngfm-connector';
-import * as multipart from 'connect-multiparty';
+const multipart = require('connect-multiparty');
 import { NgfmExpressConfig } from './ngfm-express.config';
 import { NGFM_VERBS } from './verbs/index';
 export class NgfmExpress {

@@ -45,7 +45,7 @@ class DevApp {
         const publicRoot = path.join(commonRoot, 'public');
         const publicConnector = new NgfmFileConnector({
             root: publicRoot,
-            createRoot: true
+            createRoot: true,
         });
         this.express.use('/files/public', new NgfmExpress(publicConnector, {
             serveStatic: publicRoot
