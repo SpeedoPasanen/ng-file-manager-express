@@ -2,18 +2,20 @@ const express = require('express');
 import * as path from 'path';
 import { NgfmFileConnector } from '../lib/connectors/ngfm-file-connector';
 import { NgfmExpress } from '../lib/middleware/ngfm-express';
+const cors = require('cors');
 class DevApp {
-    public express
+    public app
 
     constructor() {
-        this.express = express()
-        this.mountRoutes()
+        this.app = express();
+        this.app.use(cors());
+        this.mountRoutes();
     }
 
     private mountRoutes(): void {
         const router = express.Router()
         router.get('/', (req, res) => { res.json({ message: 'Hello World!' }) });
-        this.express.use('/', router);
+        this.app.use('/', router);
 
         /**
          * Create a root for private user files.
@@ -29,13 +31,13 @@ class DevApp {
          *  Only an authenticated user with the correct userId can access/modify.
          *  This is where your own Auth middleware would need to step in and check the user.
          */
-        this.express.use('/files/private/:userId', (req, res, next) => {
+        this.app.use('/files/private/:userId', (req, res, next) => {
             if (req.params.userId !== '1337') {
                 return res.status(401).send('Unauthorized');
             }
             next();
         });
-        this.express.use('/files/private', new NgfmExpress(privateConnector, {
+        this.app.use('/files/private', new NgfmExpress(privateConnector, {
             serveStatic: privateRoot
         }).router);
 
@@ -47,10 +49,10 @@ class DevApp {
             root: publicRoot,
             createRoot: true,
         });
-        this.express.use('/files/public', new NgfmExpress(publicConnector, {
+        this.app.use('/files/public', new NgfmExpress(publicConnector, {
             serveStatic: publicRoot
         }).router);
     }
 }
 
-export default new DevApp().express
+export default new DevApp().app

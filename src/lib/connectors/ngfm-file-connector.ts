@@ -41,14 +41,20 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
     }
     rm(path: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            rimraf(path, err => {
-                if (err) {
-                    return reject(this.getError(err));
+            try {
+                const stats = fs.statSync(path);
+                const isFolder = stats.isDirectory();
+                if (isFolder) {
+                    rimraf.sync(`path${isFolder ? '/*.*' : ''}`);
                 }
+                fs.removeSync(path);
                 resolve();
-            });
+            } catch (err) {
+                return reject(this.getError(err));
+            }
         });
     }
+
     rename(from: string, to: string): Promise<void> {
         return new Promise((resolve, reject) => {
             fs.rename(from, to, err => {
