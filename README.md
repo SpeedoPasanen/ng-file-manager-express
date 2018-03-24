@@ -12,6 +12,7 @@ Express app/middleware for ng-file-manager
 - Simple and easy-to-secure REST api
 - Plays nice with any other Express middleware and Express-based framework which allows the use of your own middleware, eg. Loopback, NestJS, ...
 - A pet project by a full-time full-stack dev, done on nights and weekends. Got so much from the Angular&Node communities, figured it's my time to give back.
+- Github: [ng-file-manager-express](https://github.com/funkizer/ng-file-manager-express)
 
 ## Demo
 - [ng-file-manager](https://funkizer.github.io)
