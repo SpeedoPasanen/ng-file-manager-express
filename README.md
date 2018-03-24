@@ -81,7 +81,7 @@ class DevApp {
         /**
          * Create a root for private user files.
          */
-        const commonRoot = path.join(__dirname, '..', '..', '..', 'dev-files');
+        const commonRoot = path.join(__dirname, 'dev-files');
         const privateRoot = path.join(commonRoot, 'private');
         const privateConnector = new NgfmFileConnector({
             root: privateRoot,
