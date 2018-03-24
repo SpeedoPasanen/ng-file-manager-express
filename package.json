@@ -1,6 +1,6 @@
 {
   "name": "ng-file-manager-express",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Express Router Backend for ng-file-manager",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
