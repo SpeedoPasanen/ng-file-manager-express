@@ -12,28 +12,36 @@ class DevApp {
 
     private mountRoutes(): void {
         const router = express.Router()
-        router.get('/', (req, res) => {
-            res.json({
-                message: 'Hello World!'
-            })
-        })
+        router.get('/', (req, res) => { res.json({ message: 'Hello World!' }) });
         this.express.use('/', router);
+
+        /**
+         * Create a root for private user files.
+         */
         const commonRoot = path.join(__dirname, '..', '..', '..', 'dev-files');
+        const privateRoot = path.join(commonRoot, 'private');
+        const privateConnector = new NgfmFileConnector({
+            root: privateRoot,
+            createRoot: true
+        });
+
+        /**
+         *  Only an authenticated user with the correct userId can access/modify.
+         *  This is where your own Auth middleware would need to step in and check the user.
+         */
         this.express.use('/files/private/:userId', (req, res, next) => {
             if (req.params.userId !== '1337') {
                 return res.status(401).send('Unauthorized');
             }
             next();
         });
-        const privateRoot = path.join(commonRoot, 'private');
-        const privateConnector = new NgfmFileConnector({
-            root: privateRoot,
-            createRoot: true
-        });
         this.express.use('/files/private', new NgfmExpress(privateConnector, {
             serveStatic: privateRoot
         }).router);
 
+        /**
+         * Create a public root
+         */
         const publicRoot = path.join(commonRoot, 'public');
         const publicConnector = new NgfmFileConnector({
             root: publicRoot,

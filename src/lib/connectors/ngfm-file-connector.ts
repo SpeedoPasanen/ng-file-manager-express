@@ -83,7 +83,6 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
                         name: fileName,
                         lastModified: new Date(stat.mtime).getTime(),
                         created: new Date(stat.birthtime).getTime(),
-                        stat: stat,
                         url: pathLib.join(path, fileName)
                     };
                     return stat.isFile() ? new NgfmFile(Object.assign(item, {
