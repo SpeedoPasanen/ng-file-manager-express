@@ -27,7 +27,7 @@ export class NgfmConnectorStore {
      * Works the same as path.join('a','b','c...'), ie. pass as many path fragments as needed.
      */
     getFullPath(...args) {
-        return pathLib.join(this.config.root, ...args);
+        return decodeURI(pathLib.join(this.config.root, ...args));
     }
     /**
      * Full public url of a request

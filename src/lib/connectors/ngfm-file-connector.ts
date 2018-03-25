@@ -9,7 +9,12 @@ import { NgfmFile } from '../models/ngfm-file';
 import { NgfmFolder } from '../models/ngfm-folder';
 import { NgfmItem } from '../models/ngfm-item';
 import { NgfmConnectorConfig } from './ngfm-connector.config';
+import { Request, Response } from 'express';
+import { NgfmImage } from '../util/ngfm-image';
+const express = require('express');
 export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnector {
+    config: NgfmConnectorConfig;
+    image: NgfmImage;
     constructor(config: NgfmConnectorConfig) {
         super(config);
         if (!fs.existsSync(config.root)) {
@@ -22,23 +27,10 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
                 throw Error(`${config.root} does not exist. Set config.createRoot to true or create the root directory first.`);
             }
         }
+        if (config.serveStatic) { this.image = new NgfmImage(this); }
         console.log(`NgfmFileConnector ready at ${this.config.root}`);
     }
-    folderExists(path: string): Promise<boolean> {
-        return this.someExists(path, false);
-    }
-    fileExists(path: string): Promise<boolean> {
-        return this.someExists(path, true);
-    }
-    someExists(path: string, lookingForAFile: boolean): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            const fullPath = this.store.getFullPath(path);
-            fs.exists(fullPath, exists => {
-                const stat = fs.statSync(fullPath);
-                return resolve(exists && (lookingForAFile ? stat.isFile() : stat.isDirectory()));
-            });
-        });
-    }
+
     rm(path: string): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
@@ -80,6 +72,25 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
             fs.ensureDirSync(path)
         }
     }
+    get(req: Request, res: Response, next: any) {
+        const fullPath = this.store.getFullPath(req.path);
+        fs.stat(fullPath, (err, stats) => {
+            if (err) { return next(err); }
+            if (stats.isDirectory()) {
+                this.ls(fullPath, this.store.getPublicUrl(req)).then(
+                    data => res.json(data),
+                    error => next(error)
+                );
+                return;
+            }
+            if (this.config && this.config.serveStatic) {
+                if ('s' in req.query) {
+                    return this.image.middleware(req, res, next);
+                }
+                express.static(this.config.root)(req, res, next);
+            }
+        });
+    }
     ls(path: string, publicUrl: string): Promise<NgfmItem[]> {
         this.ensureDirIfNeeded(path);
         return new Promise((resolve, reject) => {
@@ -96,9 +107,13 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
                         created: new Date(stat.birthtime).getTime(),
                         url: publicUrl + fileName
                     };
+                    const mime = mimeTypes.lookup(fileName);
+                    const isResizeable = stat.isFile() && /image/i.test(String(mime));
                     return stat.isFile() ? new NgfmFile(Object.assign(item, {
+                        thumbnail: this.config.serveStatic && isResizeable ? `${item.url}?s=t` : null,
+                        preview: this.config.serveStatic && isResizeable ? `${item.url}?s=p` : null,
                         size: stat.size,
-                        type: mimeTypes.lookup(fileName),
+                        type: mime,
                         extension: fileName.replace(/.*\./, '').toLowerCase(),
                     })) : new NgfmFolder(item);
                 }));

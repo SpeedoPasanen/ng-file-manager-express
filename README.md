@@ -7,10 +7,11 @@ Express app/middleware for ng-file-manager
 - An out-of-the-box Express backend for [ng-file-manager](https://github.com/funkizer/ng-file-manager) (an Angular File Manager)
 - Easily swappable connectors
     - Filesystem: NgfmFileConnector (implemented)
+        - Creates thumbnails and previews automatically from images
     - Popular cloud services (todo)
     - Make your own? Easy. Publish it on NPM? <3
 - Simple and easy-to-secure REST api
-- Plays nice with any other Express middleware and Express-based framework which allows the use of your own middleware, eg. Loopback, NestJS, ...
+- Plays nice with other Express middleware and any Express-based framework that allows the use of your own middleware, eg. Loopback, NestJS, ...
 - A pet project by a full-time full-stack dev, done on nights and weekends. Got so much from the Angular&Node communities, figured it's my time to give back.
 - Github: [ng-file-manager-express](https://github.com/funkizer/ng-file-manager-express)
 

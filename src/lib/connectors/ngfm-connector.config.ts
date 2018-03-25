@@ -3,6 +3,7 @@ export class NgfmConnectorConfig {
     createRoot?: boolean = false;
     autoCreateFolders?: boolean = true;
     absoluteUrls?: boolean = true;
+    serveStatic?: boolean = true;
     constructor(init: any) {
         Object.assign(this, init);
     }

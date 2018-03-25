@@ -62,17 +62,20 @@
     "@types/morgan": "^1.7.35",
     "@types/rimraf": "^2.0.2",
     "@types/sanitize-filename": "^1.1.28",
+    "@types/sharp": "^0.17.7",
     "body-parser": "^1.18.2",
     "connect-multiparty": "^2.1.0",
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "find-remove": "^1.2.0",
     "fs-extra": "^5.0.0",
     "mime-types": "^2.1.18",
     "morgan": "^1.9.0",
     "rimraf": "^2.6.2",
     "rxjs": "^5.5.7",
     "sanitize-filename": "^1.6.1",
-    "sha256": "^0.2.0"
+    "sha256": "^0.2.0",
+    "sharp": "^0.20.1"
   },
   "devDependencies": {
     "ava": "^1.0.0-beta.3",

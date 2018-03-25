@@ -24,7 +24,8 @@ class DevApp {
         const privateRoot = path.join(commonRoot, 'private');
         const privateConnector = new NgfmFileConnector({
             root: privateRoot,
-            createRoot: true
+            createRoot: true,
+            serveStatic: true
         });
 
         /**
@@ -37,9 +38,7 @@ class DevApp {
             }
             next();
         });
-        this.app.use('/files/private', new NgfmExpress(privateConnector, {
-            serveStatic: privateRoot
-        }).router);
+        this.app.use('/files/private', new NgfmExpress(privateConnector).router);
 
         /**
          * Create a public root
@@ -48,10 +47,9 @@ class DevApp {
         const publicConnector = new NgfmFileConnector({
             root: publicRoot,
             createRoot: true,
+            serveStatic: true
         });
-        this.app.use('/files/public', new NgfmExpress(publicConnector, {
-            serveStatic: publicRoot
-        }).router);
+        this.app.use('/files/public', new NgfmExpress(publicConnector).router);
     }
 }
 

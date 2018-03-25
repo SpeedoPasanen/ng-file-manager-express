@@ -46,7 +46,8 @@ export default function (connector: NgfmConnector) {
                 if (!hasErrored) { res.json(req.files); }
             });
         };
-        const fileName = req.path.replace(/.*\//, '');
+        const fileName = decodeURI(req.path.replace(/.*\//, ''))
+            .replace(/[\\\/]/g, '');
         const path = pathLib.join(pathLib.dirname(req.path), sanitizeFilename(fileName));
         connector.uploadFile(connector.store.getFullPath(path), file).then(
             () => {
