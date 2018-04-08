@@ -140,6 +140,6 @@ export class NgfmFileConnector extends NgfmBaseConnector implements NgfmConnecto
         });
     }
     getError(fsError: any) {
-        return `${fsError.errno} ${fsError.code}`;
+        return 'errno' in fsError && 'code' in fsError ? `${fsError.errno} ${fsError.code}` : fsError;
     }
 }
